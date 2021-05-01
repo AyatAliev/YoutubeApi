@@ -1,9 +1,9 @@
-package com.example.network
+package com.example.core.network
 
-import com.example.`object`.Constant
 import com.example.remote.YoutubeApi
 import com.example.youtubeapi.BuildConfig.BASE_URL
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -14,11 +14,14 @@ class RetrofitClient {
 
         fun create(): YoutubeApi {
 
+            val interceptor = HttpLoggingInterceptor()
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+
             val okHttpClient = OkHttpClient().newBuilder()
                 .connectTimeout(30,TimeUnit.SECONDS)
                 .writeTimeout(30,TimeUnit.SECONDS)
                 .readTimeout(30,TimeUnit.SECONDS)
-                .build()
+                .addInterceptor(interceptor).build()
 
             val retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())

@@ -1,9 +1,13 @@
 package com.example.ui.main
 
 import android.widget.Toast
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.core.network.result.Status
 import com.example.core.ui.BaseActivity
+import com.example.extensions.showMessage
+import com.example.extensions.visible
 import com.example.youtubeapi.R
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -18,15 +22,30 @@ class MainActivity : BaseActivity(R.layout.activity_main), OnItem {
 
     override fun setupLiveData() {
         initRecyclerView()
-
     }
 
     private fun initRecyclerView() {
-        viewModel?.fetchPlayList()?.observe(this, {
-            val playListAdapter = it.body()?.let { it1 -> Adapter(this, it1) }
-            recycler_view.layoutManager = LinearLayoutManager(baseContext)
-            recycler_view.adapter = playListAdapter
 
+        viewModel?.loading?.observe(this,{
+            loading.visible = it
+        })
+
+        viewModel?.fetchPlayList()?.observe(this,{ resource ->
+
+
+            when(resource.status) {
+
+                Status.LOADING -> {
+                    viewModel?.loading?.postValue(true)
+                }
+                Status.SUCCESS -> {
+                    viewModel?.loading?.postValue(false)
+                }
+                Status.ERROR -> {
+                    viewModel?.loading?.postValue(false)
+                    showMessage(resource.message)
+                }
+            }
         })
     }
 

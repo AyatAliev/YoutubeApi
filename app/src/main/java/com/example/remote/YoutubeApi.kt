@@ -17,4 +17,12 @@ interface YoutubeApi {
         @Query("key") apiKey: String,
     ): Response<PlayList>
 
+    @GET("playlist")
+    suspend fun fetcAllPlayList(
+        @Query("part") part: String,
+        @Query("channelId") channelId: String,
+        @Query("key") apiKey: String,
+        result: Int = 60
+    ): Response<PlayList>
+
 }

@@ -1,14 +1,20 @@
 package com.example
 
 import android.app.Application
-import com.example.remote.RemoteDataSource
-import com.example.repository.Repository
+import com.example.di.koinModules
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 class YouTubeApp: Application() {
 
-    companion object {
+    override fun onCreate() {
+        super.onCreate()
 
-        val repository = Repository(RemoteDataSource())
+        startKoin {
+            androidContext(this@YouTubeApp)
+            modules(koinModules)
+
+        }
 
     }
 

@@ -6,13 +6,19 @@ import com.example.YouTubeApp
 import com.example.core.network.result.Resource
 import com.example.core.ui.BaseViewModel
 import com.example.model.PlayList
+import com.example.repository.Repository
 import retrofit2.Response
 
-class MainViewModel : BaseViewModel() {
+class MainViewModel(private val repository: Repository) : BaseViewModel() {
 
     var loading = MutableLiveData<Boolean>()
 
     fun fetchPlayList(): LiveData<Resource<PlayList>> {
-        return YouTubeApp.repository.fetchYoutubeApiPlayList()
+        return repository.fetchYoutubeApiPlayList()
     }
+
+    fun fetchList(): LiveData<Resource<PlayList>> {
+        return repository.getResult()
+    }
+
 }
